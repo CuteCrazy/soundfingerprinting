@@ -15,6 +15,13 @@ namespace SoundFingerprinting.Command
         IWithFingerprintConfiguration From(string pathToAudioFile);
 
         /// <summary>
+        ///   Build fingerprints from an audio buffer
+        /// </summary>
+        /// <param name="wavBuf">Full path to audio file</param>
+        /// <returns>Configuration selector object</returns>
+        IWithFingerprintConfiguration From(byte[] wavBuf);
+
+        /// <summary>
         ///   Build fingerprints directly from audio samples. This is a handy method to build the fingerprints from sources like microphone or streaming URL
         /// </summary>
         /// <param name="audioSamples">Audio samples to build the fingerprints from</param>
@@ -29,5 +36,14 @@ namespace SoundFingerprinting.Command
         /// <param name="startAtSecond">Start at second</param>
         /// <returns>Configuration selector object</returns>
         IWithFingerprintConfiguration From(string pathToAudioFile, double secondsToProcess, double startAtSecond);
+
+        /// <summary>
+        ///   Build fingerprints from an audio file
+        /// </summary>
+        /// <param name="wavBuf">Full path to audio file</param>
+        /// <param name="secondsToProcess">Number of seconds to process</param>
+        /// <param name="startAtSecond">Start at second</param>
+        /// <returns>Configuration selector object</returns>
+        IWithFingerprintConfiguration From(byte[] wavBuf, double secondsToProcess, double startAtSecond);
     }
 }

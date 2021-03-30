@@ -23,13 +23,31 @@
         AudioSamples ReadMonoSamplesFromFile(string pathToSourceFile, int sampleRate, double seconds, double startAt);
 
         /// <summary>
+        ///  Reads mono samples from an audio file at provided sample rate
+        /// </summary>
+        /// <param name="wavBuf">audio buffer</param>
+        /// <param name="sampleRate">Target sample rate</param>
+        /// <param name="seconds">Seconds to read</param>
+        /// <param name="startAt">Start at second</param>
+        /// <returns>Audio sample</returns>
+        AudioSamples ReadMonoSamplesFromFile(byte[] wavBuf, int sampleRate, double seconds, double startAt);
+
+        /// <summary>
         ///  Read mono samples from file (full file)
         /// </summary>
         /// <param name="pathToSourceFile">Path to audio source to read from</param>
         /// <param name="sampleRate">Target sample rate</param>
         /// <returns>Audio samples</returns>
         AudioSamples ReadMonoSamplesFromFile(string pathToSourceFile, int sampleRate);
-        
+
+        /// <summary>
+        ///  Read mono samples from byte array
+        /// </summary>
+        /// <param name="wavBuf">buffer of audio source to read from</param>
+        /// <param name="sampleRate">Target sample rate</param>
+        /// <returns>Audio samples</returns>
+        AudioSamples ReadMonoSamplesFromFile(byte[] wavBuf, int sampleRate);
+
         /// <summary>
         ///  Returns a usually accurate estimate for the length of the file
         /// </summary>

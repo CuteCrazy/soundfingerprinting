@@ -28,6 +28,7 @@
                 return QueryResult.Empty(hashes);
             }
 
+            // 從資料庫取得最匹配的聲音
             var resultEntries = queryMath.GetBestCandidates(groupedQueryResults, configuration.MaxTracksToReturn, modelService, configuration);
             int totalTracksAnalyzed = groupedQueryResults.TracksCount;
             int totalSubFingerprintsAnalyzed = groupedQueryResults.SubFingerprintsCount;

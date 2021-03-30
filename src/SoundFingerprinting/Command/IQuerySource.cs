@@ -22,6 +22,16 @@
         IWithQueryConfiguration From(string pathToAudioFile, double secondsToProcess, double startAtSecond);
 
         /// <summary>
+        ///   Source is an audio file with parametrized <paramref name="startAtSecond"/> and <paramref name="secondsToProcess"/>
+        /// </summary>
+        /// <param name="wavBuf">byte array of audio</param>
+        /// <param name="secondsToProcess">Total number of seconds to fingerprint for querying</param>
+        /// <param name="startAtSecond">Start at second</param>
+        /// <returns>Configuration selector</returns>
+        IWithQueryConfiguration From(byte[] wavBuf, double secondsToProcess, double startAtSecond);
+
+
+        /// <summary>
         ///   Source is an audio samples object
         /// </summary>
         /// <param name="audioSamples">Audio samples to build the fingerprints from</param>

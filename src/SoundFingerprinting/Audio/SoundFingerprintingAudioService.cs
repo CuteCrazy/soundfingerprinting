@@ -37,6 +37,17 @@
             return new AudioSamples(downSampled, pathToSourceFile, sampleRate);
         }
 
+        public override AudioSamples? ReadMonoSamplesFromFile(byte[] wavBuf, int sampleRate, double seconds, double startAt)
+        {
+            var format = WaveFormat.FromFile(wavBuf);
+            CheckInputFileFormat(format, startAt);
+            float[] samples = ToSamples(wavBuf, format, seconds, startAt);
+            float[] monoSamples = ToMonoSamples(samples, format);
+            float[] downSampled = ToTargetSampleRate(monoSamples, format.SampleRate, sampleRate);
+            audioSamplesNormalizer.NormalizeInPlace(downSampled);
+            return new AudioSamples(downSampled, "VirtualBuffPath", sampleRate);
+        }
+
         public override float GetLengthInSeconds(string pathToSourceFile)
         {
             var format = WaveFormat.FromFile(pathToSourceFile);
@@ -69,6 +80,25 @@
                 stream.Seek(bytesPerSample * samplesToSeek, SeekOrigin.Current);
                 return GetInts(stream, format, seconds, startsAt);
             }
+        }
+
+        private float[] ToSamples(byte[] wavBuf, WaveFormat format, double seconds, double startsAt)
+        {
+            int headerLength = 44;
+            byte[] buffer = new byte[wavBuf.Length - headerLength];
+
+            Buffer.BlockCopy(wavBuf, headerLength, buffer, 0, wavBuf.Length - headerLength);
+
+            return GetInts(buffer, format, seconds, startsAt);
+
+            //using (var stream = new FileStream(pathToFile, FileMode.Open))
+            //{
+            //    stream.Seek(WaveHeaderLength, SeekOrigin.Begin);
+            //    int samplesToSeek = (int)(startsAt * format.SampleRate * format.Channels);
+            //    int bytesPerSample = format.BitsPerSample / 8;
+            //    stream.Seek(bytesPerSample * samplesToSeek, SeekOrigin.Current);
+            //    return GetInts(stream, format, seconds, startsAt);
+            //}
         }
 
         private float[] ToMonoSamples(float[] samples, WaveFormat format)
@@ -110,6 +140,50 @@
                 if (bytesPerSample == 1)
                 {
                     samples[samplesOffset] = (float) buffer[0] / normalizer;
+                }
+                else if (bytesPerSample == 2)
+                {
+                    short sample = (short)(buffer[0] | buffer[1] << 8);
+                    samples[samplesOffset] = (float)sample / normalizer;
+                }
+                else if (bytesPerSample == 3)
+                {
+                    int sample = buffer[0] | buffer[1] << 8 | buffer[2] << 16;
+                    samples[samplesOffset] = (float)sample / normalizer;
+                }
+                else
+                {
+                    int sample = buffer[0] | buffer[1] << 8 | buffer[2] << 16 | buffer[3] << 24;
+                    samples[samplesOffset] = (float)sample / normalizer;
+                }
+
+                samples[samplesOffset] = Math.Min(1, samples[samplesOffset]);
+                samplesOffset++;
+            }
+
+            return samples;
+        }
+
+        private float[] GetInts(byte[] wavData, WaveFormat format, double seconds, double startsAt)
+        {
+            int bytesPerSample = format.BitsPerSample / 8;
+            long samplesCount = GetSamplesToRead(format, seconds, startsAt);
+
+            byte[] buffer = new byte[bytesPerSample];
+
+            int normalizer = bytesPerSample == 1 ? 127 : bytesPerSample == 2 ? Int16.MaxValue : bytesPerSample == 3 ? (int)Math.Pow(2, 24) / 2 - 1 : Int32.MaxValue;
+
+            int samplesOffset = 0;
+            float[] samples = new float[samplesCount];
+            while (/*reader.CanRead && */samplesOffset < samplesCount)
+            {
+                Buffer.BlockCopy(wavData, samplesOffset * 2, buffer, 0, bytesPerSample);
+                //int read = reader.Read(buffer, 0, bytesPerSample);
+                //if (read != bytesPerSample) return samples;
+
+                if (bytesPerSample == 1)
+                {
+                    samples[samplesOffset] = (float)buffer[0] / normalizer;
                 }
                 else if (bytesPerSample == 2)
                 {

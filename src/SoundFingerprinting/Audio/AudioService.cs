@@ -14,5 +14,12 @@ namespace SoundFingerprinting.Audio
         {
             return ReadMonoSamplesFromFile(pathToSourceFile, sampleRate, 0, 0);
         }
+
+        public abstract AudioSamples ReadMonoSamplesFromFile(byte[] wavBuf, int sampleRate, double seconds, double startAt);
+
+        public AudioSamples ReadMonoSamplesFromFile(byte[] wavBuf, int sampleRate)
+        {
+            return ReadMonoSamplesFromFile(wavBuf, sampleRate, 0, 0);
+        }
     }
 }

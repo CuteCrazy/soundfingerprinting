@@ -46,6 +46,13 @@
             return this;
         }
 
+        public IWithQueryConfiguration From(byte[] wavBuf, double secondsToProcess, double startAtSecond)
+        {
+            fingerprintingMethodFromSelector = () => fingerprintCommandBuilder.BuildFingerprintCommand()
+                                                                              .From(wavBuf, secondsToProcess, startAtSecond);
+            return this;
+        }
+
         public IWithQueryConfiguration From(AudioSamples audioSamples)
         {
             fingerprintingMethodFromSelector = () => fingerprintCommandBuilder.BuildFingerprintCommand().From(audioSamples);

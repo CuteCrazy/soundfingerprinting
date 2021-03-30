@@ -39,6 +39,17 @@ namespace SoundFingerprinting.Command
             return this;
         }
 
+        public IWithFingerprintConfiguration From(byte[] wavBuf)
+        {
+            createFingerprintsMethod = () =>
+            {
+                AudioSamples audioSamples = audioService.ReadMonoSamplesFromFile(wavBuf, fingerprintConfiguration.SampleRate);
+                return fingerprintService.CreateFingerprintsFromAudioSamples(audioSamples, fingerprintConfiguration);
+            };
+
+            return this;
+        }
+
         public IWithFingerprintConfiguration From(AudioSamples audioSamples)
         {
             createFingerprintsMethod = () => fingerprintService.CreateFingerprintsFromAudioSamples(audioSamples, fingerprintConfiguration);
@@ -52,6 +63,17 @@ namespace SoundFingerprinting.Command
                     AudioSamples audioSamples = audioService.ReadMonoSamplesFromFile(pathToAudioFile, fingerprintConfiguration.SampleRate, secondsToProcess, startAtSecond);
                     return fingerprintService.CreateFingerprintsFromAudioSamples(audioSamples, fingerprintConfiguration);
                 };
+
+            return this;
+        }
+
+        public IWithFingerprintConfiguration From(byte[] wavBuf, double secondsToProcess, double startAtSecond)
+        {
+            createFingerprintsMethod = () =>
+            {
+                AudioSamples audioSamples = audioService.ReadMonoSamplesFromFile(wavBuf, fingerprintConfiguration.SampleRate, secondsToProcess, startAtSecond);
+                return fingerprintService.CreateFingerprintsFromAudioSamples(audioSamples, fingerprintConfiguration);
+            };
 
             return this;
         }

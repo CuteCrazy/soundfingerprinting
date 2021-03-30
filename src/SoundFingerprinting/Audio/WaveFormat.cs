@@ -40,6 +40,31 @@
             }
         }
 
+        public static WaveFormat FromFile(byte[] wavBuf)
+        {
+            byte[] header = new byte[44];
+
+            Buffer.BlockCopy(wavBuf, 0, header, 0, 44);
+
+            if (header.Length != 44)
+            {
+                throw new ArgumentException("wav buffer is not a valid wav since it does not contain a header");
+            }
+
+            short channels = (short)(header[22] | header[23] << 8);
+            int sampleRate = header[24] | header[25] << 8 | header[26] << 16 | header[27] << 24;
+            short bitsPerSample = (short)(header[34] | header[35] << 8);
+            long bytes = wavBuf.Length - 44;
+
+            return new WaveFormat
+            {
+                Channels = channels,
+                SampleRate = sampleRate,
+                BitsPerSample = bitsPerSample,
+                Length = bytes
+            };
+        }
+
         public override string ToString()
         {
             return $"Format: SampleRate ${SampleRate}, Channels ${Channels}, BitsPerSample ${BitsPerSample}, Length ${Length}";
