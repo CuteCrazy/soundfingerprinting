@@ -11,7 +11,7 @@ namespace SoundFingerprinting.Data
     public class Hashes : IEnumerable<HashedFingerprint>
     {
         [ProtoMember(1)]
-        private readonly List<HashedFingerprint> fingerprints;
+        public /*readonly*/ List<HashedFingerprint> fingerprints;
 
         [ProtoIgnore]
         private List<HashedFingerprint> Fingerprints => fingerprints ?? Enumerable.Empty<HashedFingerprint>().ToList();
@@ -62,19 +62,19 @@ namespace SoundFingerprinting.Data
         }
 
         [ProtoMember(2)]
-        public double DurationInSeconds { get; }
+        public double DurationInSeconds { get; set; }
 
         [ProtoMember(3)] 
-        public string StreamId { get; }
+        public string StreamId { get; set; }
 
         [ProtoMember(4)]
-        public DateTime RelativeTo { get; }
+        public DateTime RelativeTo { get; set; }
 
         [ProtoMember(5)]
-        public IEnumerable<string> Origins { get; }
+        public IEnumerable<string> Origins { get; set; }
 
         [ProtoMember(6)]
-        public MediaType MediaType { get; }
+        public MediaType MediaType { get; set; }
 
         public DateTime EndsAt
         {
@@ -91,6 +91,11 @@ namespace SoundFingerprinting.Data
                 }
                 
                 return RelativeTo.Add(TimeSpan.FromSeconds(DurationInSeconds));
+            }
+
+            set
+            {
+
             }
         }
 
