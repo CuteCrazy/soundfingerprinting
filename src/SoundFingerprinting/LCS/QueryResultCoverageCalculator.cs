@@ -18,7 +18,7 @@
             System.Diagnostics.Trace.WriteLine("Match list: ");
             foreach (var match in matches)
             {
-                System.Diagnostics.Trace.WriteLine("MatchAt: " + match.QueryMatchAt + " / " + match.TrackMatchAt + " SequenceNum: " + match.QuerySequenceNumber + " / " + match.TrackSequenceNumber + " --- score: " + match.Score);
+                System.Diagnostics.Trace.WriteLine("Match Ad: " + trackData.Title + ", MatchAt: " + match.QueryMatchAt + " / " + match.TrackMatchAt + " SequenceNum: " + match.QuerySequenceNumber + " / " + match.TrackSequenceNumber + " --- score: " + match.Score);
             }
             System.Diagnostics.Trace.WriteLine(" ---------- \n");
 
